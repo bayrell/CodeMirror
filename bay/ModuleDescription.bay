@@ -1,0 +1,105 @@
+/*!
+ *  CodeMirror Assets
+ *  
+ *  MIT License
+ *  
+ *  (c) Copyright 2019 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+namespace Assets.CodeMirror;
+
+use Runtime.Interfaces.ContextInterface;
+use Runtime.Interfaces.ModuleDescriptionInterface;
+
+
+class ModuleDescription implements ModuleDescriptionInterface
+{
+	
+	
+	/**
+	 * Returns module name
+	 * @return string
+	 */
+	lambda string getName() => "Assets.CodeMirror";
+	
+	
+	
+	/**
+	 * Returns module name
+	 * @return string
+	 */
+	lambda string getModuleVersion() => "5.47.0";
+	
+	
+	
+	/**
+	 * Returns required modules
+	 * @return Map<string>
+	 */
+	lambda Map<string> requiredModules() =>
+	{
+	};
+	
+	
+	
+	/**
+	 * Returns module files load order
+	 * @return Collection<string>
+	 */
+	lambda Collection<string> getModuleFiles() => 
+	[
+		"Assets.CodeMirror.CodeMirrorAssets",
+		"Assets.CodeMirror.ModuleDescription",
+	];
+	
+	
+	
+	/**
+	 * Returns enities
+	 */
+	lambda Collection<Dict> entities() => null;
+	
+	
+	
+	/**
+	 * Init context
+	 * @param ContextInterface context
+	 */
+	public static void initContext(ContextInterface context){}
+	
+	
+	
+	/**
+	 * Called then module registed in context
+	 * @param ContextInterface context
+	 */
+	public static void onRegister(ContextInterface context){}
+	
+	
+	
+	/**
+	 * Called then context read config
+	 * @param Map<mixed> config
+	 */
+	public static void onReadConfig(ContextInterface context, Map<mixed> config){}
+	
+	
+}
