@@ -38,7 +38,7 @@ class ModuleDescription implements ModuleDescriptionInterface
 	 * Returns module name
 	 * @return string
 	 */
-	lambda string getName() => "Assets.CodeMirror";
+	lambda string getModuleName() => "Assets.CodeMirror";
 	
 	
 	
@@ -56,6 +56,7 @@ class ModuleDescription implements ModuleDescriptionInterface
 	 */
 	lambda Map<string> requiredModules() =>
 	{
+		"Core.UI": "*",
 	};
 	
 	

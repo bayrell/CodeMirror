@@ -35,6 +35,13 @@ class CodeMirrorAssets implements AssetsInterface
 {
 	
 	/**
+	 * Returns module name
+	 * @return string
+	 */
+	lambda string getModuleName() => "Assets.CodeMirror";
+	
+	
+	/**
 	 * Returns required modules
 	 * @return Dict<string>
 	 */
