@@ -1,3 +1,15 @@
 {
 	"name": "Assets.CodeMirror",
+	"assets":
+	[
+		"CodeMirror",
+		"ModuleDescription",
+		"@codemirror/lib/codemirror.css",
+		"@codemirror/lib/codemirror.js",
+		"@codemirror/addon/display/autorefresh.js",
+		"@codemirror/mode/css/css.js",
+		"@codemirror/mode/xml/xml.js",
+		"@codemirror/mode/javascript/javascript.js",
+		"@codemirror/mode/htmlmixed/htmlmixed.js"
+	]
 }

@@ -3,7 +3,7 @@
  *  
  *  MIT License
  *  
- *  (c) Copyright 2019 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2021 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,29 +26,26 @@
 
 namespace Assets.CodeMirror;
 
-use Runtime.Interfaces.AssetsInterface;
-use Runtime.Interfaces.ContextInterface;
-use Runtime.Interfaces.ModuleDescriptionInterface;
-use Core.UI.Render.RenderContainer;
+use Runtime.Driver;
+use Runtime.Entity;
 
 
-class ModuleDescription implements ModuleDescriptionInterface, AssetsInterface
+static class ModuleDescription
 {
 	
+	/**
+	 * Returns module name
+	 * @return string
+	 */
+	pure string getModuleName() => "Assets.CodeMirror";
+	
+	
 	
 	/**
 	 * Returns module name
 	 * @return string
 	 */
-	lambda string getModuleName() => "Assets.CodeMirror";
-	
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	lambda string getModuleVersion() => "5.47.0";
+	pure string getModuleVersion() => "5.47.0";
 	
 	
 	
@@ -56,69 +53,6 @@ class ModuleDescription implements ModuleDescriptionInterface, AssetsInterface
 	 * Returns required modules
 	 * @return Map<string>
 	 */
-	lambda Map<string> requiredModules() =>
-	{
-		"Core.UI": "*",
-	};
-	
-	
-	
-	/**
-	 * Returns module files load order
-	 * @return Collection<string>
-	 */
-	lambda Collection<string> getModuleFiles() => 
-	[
-		"Assets.CodeMirror.ModuleDescription",
-	];
-	
-	
-	
-	/**
-	 * Returns enities
-	 */
-	lambda Collection<Dict> entities() => null;
-	
-	
-	
-	/**
-	 * Returns sync loaded files
-	 */
-	lambda Collection<string> resources() =>
-		[
-			"@Assets.CodeMirror/resources/codemirror/lib/codemirror.css",
-			"@Assets.CodeMirror/resources/codemirror/lib/codemirror.js",
-			"@Assets.CodeMirror/resources/codemirror/addon/display/autorefresh.js",
-			"@Assets.CodeMirror/resources/codemirror/mode/css/css.js",
-			"@Assets.CodeMirror/resources/codemirror/mode/xml/xml.js",
-			"@Assets.CodeMirror/resources/codemirror/mode/javascript/javascript.js",
-			"@Assets.CodeMirror/resources/codemirror/mode/htmlmixed/htmlmixed.js",
-		]
-	;
-	
-	
-	
-	/**
-	 * Called then module registed in context
-	 * @param ContextInterface context
-	 */
-	public static void onRegister(ContextInterface context){}
-	
-	
-	
-	/**
-	 * Called then context read config
-	 * @param Map<mixed> config
-	 */
-	public static void onReadConfig(ContextInterface context, Map<mixed> config){}
-	
-	
-	
-	/**
-	 * Init context
-	 * @param ContextInterface context
-	 */
-	public static void onInitContext(ContextInterface context){}
-	
+	pure Map<string> requiredModules() => null;
 	
 }

@@ -1,0 +1,137 @@
+<!--
+ *  CodeMirror Assets
+ *  
+ *  MIT License
+ *  
+ *  (c) Copyright 2016-2021 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+-->
+
+<class version="1.0"
+	name="Assets.CodeMirror.CodeMirror" extends="Runtime.Web.Component" 
+	module="Assets.CodeMirror"
+>
+
+
+<use name="Runtime.Core.Message" />
+<use name="Runtime.Web.Events.ChangeEvent" />
+
+
+<template name="render">
+	<div class="input" @ref="input" />
+</template>
+
+
+<script>
+
+var input = null;
+var code = null;
+var change_timer = null;
+bool code_created = false;
+
+
+/**
+ * Returns true if need to repaint component
+ */
+bool isRepaint()
+{
+	if (this.is_new_element)
+	{
+		return true;
+	}
+	return false;
+}
+
+
+
+/**
+ * On component created
+ */
+void onCreate()
+{
+	#ifcode JAVASCRIPT then
+	setTimeout
+	(
+		() => {
+			this.code = window.CodeMirror
+			(
+				this.input,
+				{
+					lineNumbers: true,
+					mode: "htmlmixed",
+					matchBrackets: true,
+				}
+			);
+			this.code_created = true;
+			
+			/* onChange */
+			this.code.on("change", (code) => {
+				if (this.change_timer == null)
+				{
+					this.change_timer = setTimeout(this.onCodeChanged.bind(this), 100);
+				}
+			});
+			
+			/* Set full size */
+			/* this.code.setSize("100%", "100%"); */
+			
+		}, 10
+	);
+	#endif
+}
+
+
+
+/**
+ * On code changed
+ */
+void onCodeChanged()
+{
+	this.change_timer = null;
+	string value = this.code.getDoc().getValue();
+	this.new_model = value;
+	this.signal
+	(
+		new ChangeEvent
+		{
+			"value": value,
+			"old_value": this.old_model,
+		}
+	);
+}
+
+
+
+/**
+ * On update
+ */
+void onUpdate()
+{
+	if (this.code_created and this.new_model != this.old_model)
+	{
+		string value = this.model();
+		this.code.getDoc().setValue(value);
+	}
+}
+
+
+</script>
+
+</class>
