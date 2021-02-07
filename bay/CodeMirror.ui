@@ -77,6 +77,7 @@ void onCreate()
 					lineNumbers: true,
 					mode: "htmlmixed",
 					matchBrackets: true,
+					tabSize: 2,
 				}
 			);
 			this.code_created = true;
@@ -86,6 +87,14 @@ void onCreate()
 				if (this.change_timer == null)
 				{
 					this.change_timer = setTimeout(this.onCodeChanged.bind(this), 100);
+				}
+			});
+			
+			this.code.setOption("extraKeys", {
+				Tab: function(cm)
+				{
+					var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+					cm.replaceSelection(spaces);
 				}
 			});
 			
@@ -127,7 +136,15 @@ void onUpdate()
 	if (this.code_created and this.new_model != this.old_model)
 	{
 		string value = this.model();
-		this.code.getDoc().setValue(value);
+		
+		#ifcode JAVASCRIPT then
+		setTimeout
+		(
+			() => { this.code.getDoc().setValue(value); },
+			10
+		);
+		#endif
+		
 	}
 }
 
