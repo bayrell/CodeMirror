@@ -53,70 +53,6 @@ string old_value = "";
 
 
 /**
- * Render
- */
-void renderOld()
-{
-	#switch
-	
-	#case ifcode PHP then
-	
-	$__v = new \Runtime\Vector();
-	
-	/* Element 'div' */
-	$__v0 = new \Runtime\Vector();
-	
-	/* Element 'textarea' */
-	$__v1 = new \Runtime\Vector();
-	
-	/* Text */
-	$this->_t($__v1, $this->_escape($this->value));
-	
-	/* Element 'textarea' */
-	$this->_e($__v0, "textarea", ["class" => $this->_class_name(["widget_textarea"])], $__v1);
-	
-	/* Element 'div' */
-	$this->_e($__v, "div", ["class" => $this->_class_name(["widget_codemirror"])], $__v0);
-	
-	return $__v->join("");
-	
-	#case ifcode JAVASCRIPT then
-	
-	if (this.render_cache.has("render"))
-		return this.render_cache.get("render");
-	
-	let __v = [];
-	
-	Vue.setBlockTracking(-1);
-	
-	/* Element 'div' */
-	let __v0 = this._e(__v, "div", {
-		"class":this._class_name(["widget_codemirror"]),
-		"key":"widget_codemirror"
-	});
-	
-	/* Element 'textarea' */
-	let __v1 = this._e(__v0, "textarea", {
-		"ref":"input",
-		"class":this._class_name(["widget_textarea"]),
-		"key":"widget_textarea"
-	});
-	
-	/* Render */
-	this._t(__v1, this.value);
-	
-	Vue.setBlockTracking(1);
-	
-	__v = this._flatten(__v);
-	this.render_cache.set("render", __v);
-	
-	return __v;
-	
-	#endswitch
-}
-
-
-/**
  * Component mounted
  */
 void onMounted()
@@ -211,7 +147,9 @@ void onUpdated()
 		#ifcode JAVASCRIPT then
 		setTimeout
 		(
-			() => { this.instance.getDoc().setValue(this.value); },
+			() => {
+				this.instance.getDoc().setValue(this.value);
+			},
 			10
 		);
 		#endif
