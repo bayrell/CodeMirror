@@ -3,7 +3,7 @@
  *  
  *  MIT License
  *  
- *  (c) Copyright 2016-2021 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,7 @@
  *  THE SOFTWARE.
 -->
 
-<class version="1.0"
-	name="Assets.CodeMirror.CodeMirror" extends="Runtime.Web.Component" 
-	module="Assets.CodeMirror"
->
-
-
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.ChangeEvent" />
+<class name="Runtime.Widget.CodeMirror.CodeMirror">
 
 
 <template name="render">
@@ -41,38 +34,25 @@
 
 <script>
 
-var input = null;
-var code = null;
+props string value = "";
+bool is_code_created = false;
 var change_timer = null;
-bool code_created = false;
+var code = null;
 
 
 /**
- * Returns true if need to repaint component
+ * Component mounted
  */
-bool isRepaint()
-{
-	if (this.is_new_element)
-	{
-		return true;
-	}
-	return false;
-}
-
-
-
-/**
- * On component created
- */
-void onCreate()
+void onMounted()
 {
 	#ifcode JAVASCRIPT then
 	setTimeout
 	(
 		() => {
+			var input = this.getRef("input");
 			this.code = window.CodeMirror
 			(
-				this.input,
+				input,
 				{
 					lineNumbers: true,
 					mode: "htmlmixed",
@@ -80,7 +60,7 @@ void onCreate()
 					tabSize: 2,
 				}
 			);
-			this.code_created = true;
+			this.is_code_created = true;
 			
 			/* onChange */
 			this.code.on("change", (code) => {
@@ -107,7 +87,6 @@ void onCreate()
 }
 
 
-
 /**
  * On code changed
  */
@@ -115,36 +94,25 @@ void onCodeChanged()
 {
 	this.change_timer = null;
 	string value = this.code.getDoc().getValue();
-	this.new_model = value;
-	this.signal
-	(
-		new ChangeEvent
-		{
-			"value": value,
-			"old_value": this.old_model,
-		}
-	);
+	this.old_value = value;
+	this.emit("changed", value);
 }
 
 
-
 /**
- * On update
+ * On updated
  */
-void onUpdate()
+void onUpdated()
 {
-	if (this.code_created and this.new_model != this.old_model)
+	if (this.is_code_created and this.old_value != this.value)
 	{
-		string value = this.model();
-		
 		#ifcode JAVASCRIPT then
 		setTimeout
 		(
-			() => { this.code.getDoc().setValue(value); },
+			() => { this.code.getDoc().setValue(this.value); },
 			10
 		);
 		#endif
-		
 	}
 }
 

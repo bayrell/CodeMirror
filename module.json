@@ -1,15 +1,25 @@
 {
-	"name": "Assets.CodeMirror",
+	"name": "Runtime.Widget.CodeMirror",
 	"assets":
 	[
-		"CodeMirror",
-		"ModuleDescription",
-		"@codemirror/lib/codemirror.css",
-		"@codemirror/lib/codemirror.js",
-		"@codemirror/addon/display/autorefresh.js",
-		"@codemirror/mode/css/css.js",
-		"@codemirror/mode/xml/xml.js",
-		"@codemirror/mode/javascript/javascript.js",
-		"@codemirror/mode/htmlmixed/htmlmixed.js"
+		"CodeMirror.bay",
+		"@resources/codemirror/lib/codemirror.js",
+		"@resources/codemirror/addon/display/autorefresh.js",
+		"@resources/codemirror/mode/css/css.js",
+		"@resources/codemirror/mode/xml/xml.js",
+		"@resources/codemirror/mode/javascript/javascript.js",
+		"@resources/codemirror/mode/htmlmixed/htmlmixed.js"
+	],
+	"src": "./bay",
+	"dest":
+	{
+		"php": "./php",
+		"es6": "./es6"
+	},
+	"allow":
+	[
+		"\\.bay$",
+		"\\.php$",
+		"\\.js$"
 	]
 }
