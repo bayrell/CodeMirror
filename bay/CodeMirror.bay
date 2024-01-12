@@ -26,18 +26,94 @@
 
 <class name="Runtime.Widget.CodeMirror.CodeMirror">
 
+<style>
+.widget_textarea{
+	display: none;
+}
+</style>
+
 
 <template name="render">
-	<div class="input" @ref="input" />
+	<div class="widget_codemirror">
+		<textarea class="widget_textarea" @ref="input">{{ this.value }}</textarea>
+	</div>
 </template>
 
 
 <script>
 
+props string mode = "htmlmixed";
+props string min_height = "500px";
 props string value = "";
-bool is_code_created = false;
+props var readonly = false;
+bool is_instance_created = false;
 var change_timer = null;
-var code = null;
+var instance = null;
+string old_value = "";
+
+
+/**
+ * Render
+ */
+void renderOld()
+{
+	#switch
+	
+	#case ifcode PHP then
+	
+	$__v = new \Runtime\Vector();
+	
+	/* Element 'div' */
+	$__v0 = new \Runtime\Vector();
+	
+	/* Element 'textarea' */
+	$__v1 = new \Runtime\Vector();
+	
+	/* Text */
+	$this->_t($__v1, $this->_escape($this->value));
+	
+	/* Element 'textarea' */
+	$this->_e($__v0, "textarea", ["class" => $this->_class_name(["widget_textarea"])], $__v1);
+	
+	/* Element 'div' */
+	$this->_e($__v, "div", ["class" => $this->_class_name(["widget_codemirror"])], $__v0);
+	
+	return $__v->join("");
+	
+	#case ifcode JAVASCRIPT then
+	
+	if (this.render_cache.has("render"))
+		return this.render_cache.get("render");
+	
+	let __v = [];
+	
+	Vue.setBlockTracking(-1);
+	
+	/* Element 'div' */
+	let __v0 = this._e(__v, "div", {
+		"class":this._class_name(["widget_codemirror"]),
+		"key":"widget_codemirror"
+	});
+	
+	/* Element 'textarea' */
+	let __v1 = this._e(__v0, "textarea", {
+		"ref":"input",
+		"class":this._class_name(["widget_textarea"]),
+		"key":"widget_textarea"
+	});
+	
+	/* Render */
+	this._t(__v1, this.value);
+	
+	Vue.setBlockTracking(1);
+	
+	__v = this._flatten(__v);
+	this.render_cache.set("render", __v);
+	
+	return __v;
+	
+	#endswitch
+}
 
 
 /**
@@ -49,28 +125,51 @@ void onMounted()
 	setTimeout
 	(
 		() => {
+			
+			var readonly = this.readonly;
+			if (readonly == "true" || readonly == "1") readonly = true;
+			else readonly = false;
+			
 			var input = this.getRef("input");
-			this.code = window.CodeMirror
+			this.instance = window.CodeMirror.fromTextArea
 			(
 				input,
 				{
 					lineNumbers: true,
-					mode: "htmlmixed",
+					lineWrapping: true,
+					mode: this.mode,
 					matchBrackets: true,
 					tabSize: 2,
+					readonly: readonly,
 				}
 			);
-			this.is_code_created = true;
+			
+			this.instance.refresh();
+			this.is_instance_created = true;
+			
+			/* Set value */
+			let value = this.value;
+			if (value)
+			{
+				this.instance.getDoc().setValue(value);
+				this.old_value = value;
+			}
+			else
+			{
+				this.instance.getDoc().setValue("");
+				this.old_value = "";
+			}
 			
 			/* onChange */
-			this.code.on("change", (code) => {
+			this.instance.on("change", (code) => {
 				if (this.change_timer == null)
 				{
 					this.change_timer = setTimeout(this.onCodeChanged.bind(this), 100);
 				}
 			});
 			
-			this.code.setOption("extraKeys", {
+			/* Extra keys */
+			this.instance.setOption("extraKeys", {
 				Tab: function(cm)
 				{
 					var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
@@ -78,8 +177,11 @@ void onMounted()
 				}
 			});
 			
+			/* Set min height */
+			this.instance.display.wrapper.style.minHeight = this.min_height;
+			
 			/* Set full size */
-			/* this.code.setSize("100%", "100%"); */
+			/* this.instance.setSize("100%", "100%"); */
 			
 		}, 10
 	);
@@ -93,9 +195,9 @@ void onMounted()
 void onCodeChanged()
 {
 	this.change_timer = null;
-	string value = this.code.getDoc().getValue();
+	string value = this.instance.getDoc().getValue();
 	this.old_value = value;
-	this.emit("changed", value);
+	this.emit("valueChanged", value);
 }
 
 
@@ -104,12 +206,12 @@ void onCodeChanged()
  */
 void onUpdated()
 {
-	if (this.is_code_created and this.old_value != this.value)
+	if (this.is_instance_created and this.old_value != this.value)
 	{
 		#ifcode JAVASCRIPT then
 		setTimeout
 		(
-			() => { this.code.getDoc().setValue(this.value); },
+			() => { this.instance.getDoc().setValue(this.value); },
 			10
 		);
 		#endif
