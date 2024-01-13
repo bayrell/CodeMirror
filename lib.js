@@ -31,9 +31,12 @@ exports.defModule = function(params)
 		if (module_name)
 		{
 			let new_content = "Runtime.rtl.defModule(function(require){\n" +
+				"/* Module name " + module_name + " */\n" +
+				"var module = { exports: null };\n" +
 				"var exports = {};\n" +
-				content + 
-				"\nreturn {" +
+				content + "\n" +
+				"if (module.exports != null) exports = module.exports;\n" +
+				"return {" +
 				"'module_name': " + JSON.stringify(module_name) + "," +
 				"'exports': exports" +
 				"};\n" +

@@ -5,13 +5,21 @@
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/gulp build",
+    "clean": "./node_modules/.bin/gulp clean",
     "gulp": "./node_modules/.bin/gulp"
   },
   "author": "Ildar Bikmamatov <support@bayrell.org>",
   "license": "MIT",
   "dependencies": {
+    "@codemirror/commands": "^6.3.3",
+    "@codemirror/language": "^6.10.0",
+    "@codemirror/lint": "^6.4.2",
     "@codemirror/view": "^6.23.0",
+    "@lezer/common": "^1.2.0",
+    "@lezer/highlight": "^1.2.0",
+    "crelt": "^1.0.6",
     "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-uglify": "^3.0.2",
     "style-mod": "^4.1.0",

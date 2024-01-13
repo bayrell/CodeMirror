@@ -26,9 +26,10 @@
 
 <class name="Runtime.Widget.CodeMirror.CodeMirror">
 
-<style>
-.widget_textarea{
-	display: none;
+<style global="true">
+.widget_codemirror.h-f977 .cm-editor{
+	border: 1px solid var(--widget-color-border);
+	outline: none;
 }
 </style>
 
@@ -40,8 +41,8 @@
 
 <script>
 
-props string mode = "htmlmixed";
-props string min_height = "500px";
+props string language = null;
+props string height = "";
 props string value = "";
 props var readonly = false;
 bool is_instance_created = false;
@@ -59,69 +60,68 @@ void onMounted()
 	setTimeout
 	(
 		() => {
-			var codemirror = Runtime.rtl.require("@codemirror/view");
+			var view = Runtime.rtl.require("@codemirror/view");
+			var state = Runtime.rtl.require("@codemirror/state");
+			var commands = Runtime.rtl.require("@codemirror/commands");
 			
-			var readonly = this.readonly;
-			if (readonly == "true" || readonly == "1") readonly = true;
-			else readonly = false;
+			var extensions = [
+				commands.history(),
+				view.lineNumbers(),
+				view.keymap.of([commands.indentWithTab]),
+			];
 			
+			/* Set readonly */
+			if (this.readonly == "true" || this.readonly == "1")
+			{
+				extensions.push(state.EditorState.readOnly.of(true));
+			}
+			
+			/* On change listener */
+			extensions.push(view.EditorView.updateListener.of((update) => {
+				if (update.docChanged)
+				{
+					if (this.change_timer == null)
+					{
+						this.change_timer = setTimeout(this.onCodeChanged.bind(this), 100);
+					}
+				}
+			}));
+			
+			/* Create instance */
 			var codemirror_ref = this.getRef("codemirror");
-			this.instance = new codemirror.EditorView({
+			this.instance = new view.EditorView({
+				extensions: extensions,
 				parent: codemirror_ref
 			});
 			this.is_instance_created = true;
 			
-			/*
-			this.instance = window.CodeMirror.fromTextArea
-			(
-				input,
-				{
-					lineNumbers: true,
-					lineWrapping: true,
-					mode: this.mode,
-					matchBrackets: true,
-					tabSize: 2,
-					readonly: readonly,
-				}
-			);
-			this.instance.refresh();*/
-			
-			/* Set value 
+			/* Set value */
 			let value = this.value;
 			if (value)
 			{
-				this.instance.getDoc().setValue(value);
+				this.instance.dispatch({
+					changes: {from: 0, to: this.instance.state.doc.length, insert: value}
+				});
 				this.old_value = value;
 			}
 			else
 			{
-				this.instance.getDoc().setValue("");
+				this.instance.dispatch({
+					changes: {from: 0, to: this.instance.state.doc.length, insert: ""}
+				});
 				this.old_value = "";
 			}
-			*/
-			/* onChange 
-			this.instance.on("change", (code) => {
-				if (this.change_timer == null)
-				{
-					this.change_timer = setTimeout(this.onCodeChanged.bind(this), 100);
-				}
-			});
-			*/
-			/* Extra keys 
-			this.instance.setOption("extraKeys", {
-				Tab: function(cm)
-				{
-					var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-					cm.replaceSelection(spaces);
-				}
-			});
-			*/
-			/* Set min height 
-			this.instance.display.wrapper.style.minHeight = this.min_height;
-			*/
-			/* Set full size */
-			/* this.instance.setSize("100%", "100%"); */
 			
+			/* Set height */
+			if (this.height != "")
+			{
+				var dom = this.instance.dom;
+				var scroller = dom.querySelector('.cm-scroller');
+				dom.style.minHeight = this.height;
+				dom.style.maxHeight = this.height;
+				scroller.style.minHeight = this.height;
+				scroller.style.overflow = "auto";
+			}
 		}, 10
 	);
 	#endif
@@ -134,7 +134,7 @@ void onMounted()
 void onCodeChanged()
 {
 	this.change_timer = null;
-	string value = this.instance.getDoc().getValue();
+	string value = this.instance.state.doc.toString();
 	this.old_value = value;
 	this.emit("valueChanged", value);
 }
@@ -148,13 +148,9 @@ void onUpdated()
 	if (this.is_instance_created and this.old_value != this.value)
 	{
 		#ifcode JAVASCRIPT then
-		setTimeout
-		(
-			() => {
-				this.instance.getDoc().setValue(this.value);
-			},
-			10
-		);
+		this.instance.dispatch({
+			changes: {from: 0, to: this.instance.state.doc.length, insert: this.value}
+		});
 		#endif
 	}
 }
