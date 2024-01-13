@@ -1,7 +1,7 @@
 {
   "name": "runtime-widget-codemirror",
   "version": "6.0.0",
-  "description": "Code Mirror Assets",
+  "description": "Code Mirror widget for BayLang",
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/gulp build",

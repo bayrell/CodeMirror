@@ -95,6 +95,20 @@ void onMounted()
 			});
 			this.is_instance_created = true;
 			
+			/* Set height */
+			if (this.height != "")
+			{
+				var dom = this.instance.dom;
+				var scroller = dom.querySelector('.cm-scroller');
+				var content = dom.querySelector('.cm-content');
+				var gutter = dom.querySelector('.cm-gutter');
+				dom.style.minHeight = this.height;
+				dom.style.maxHeight = this.height;
+				content.style.minHeight = this.height;
+				gutter.style.minHeight = this.height;
+				scroller.style.minHeight = this.height;
+			}
+			
 			/* Set value */
 			let value = this.value;
 			if (value)
@@ -110,17 +124,6 @@ void onMounted()
 					changes: {from: 0, to: this.instance.state.doc.length, insert: ""}
 				});
 				this.old_value = "";
-			}
-			
-			/* Set height */
-			if (this.height != "")
-			{
-				var dom = this.instance.dom;
-				var scroller = dom.querySelector('.cm-scroller');
-				dom.style.minHeight = this.height;
-				dom.style.maxHeight = this.height;
-				scroller.style.minHeight = this.height;
-				scroller.style.overflow = "auto";
 			}
 		}, 10
 	);
