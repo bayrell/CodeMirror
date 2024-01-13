@@ -17,6 +17,7 @@
     "@codemirror/view": "^6.23.0",
     "@lezer/common": "^1.2.0",
     "@lezer/highlight": "^1.2.0",
+    "glob-parent": ">=5.1.2",
     "crelt": "^1.0.6",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
