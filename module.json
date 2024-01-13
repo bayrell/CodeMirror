@@ -1,0 +1,20 @@
+{
+	"name": "Runtime.Widget.CodeMirror",
+	"assets":
+	[
+		"CodeMirror.bay",
+		"@resources/codemirror.js"
+	],
+	"src": "./bay",
+	"dest":
+	{
+		"php": "./php",
+		"es6": "./es6"
+	},
+	"allow":
+	[
+		"\\.bay$",
+		"\\.php$",
+		"\\.js$"
+	]
+}

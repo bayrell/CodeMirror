@@ -1,0 +1,20 @@
+{
+  "name": "runtime-widget-codemirror",
+  "version": "6.0.0",
+  "description": "Code Mirror Assets",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/gulp build",
+    "gulp": "./node_modules/.bin/gulp"
+  },
+  "author": "Ildar Bikmamatov <support@bayrell.org>",
+  "license": "MIT",
+  "dependencies": {
+    "@codemirror/view": "^6.23.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.2",
+    "style-mod": "^4.1.0",
+    "w3c-keyname": "^2.2.8"
+  }
+}
