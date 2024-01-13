@@ -82,7 +82,7 @@ void onMounted()
 				{
 					if (this.change_timer == null)
 					{
-						this.change_timer = setTimeout(this.onCodeChanged.bind(this), 100);
+						this.change_timer = setTimeout(this.onCodeChanged.bind(this), 200);
 					}
 				}
 			}));
@@ -139,7 +139,7 @@ void onCodeChanged()
 	this.change_timer = null;
 	string value = this.instance.state.doc.toString();
 	this.old_value = value;
-	this.emit("valueChanged", value);
+	this.emit("valueChanged", value, this.data);
 }
 
 
