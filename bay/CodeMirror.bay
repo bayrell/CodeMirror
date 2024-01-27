@@ -82,7 +82,7 @@ void onMounted()
 				{
 					if (this.change_timer == null)
 					{
-						this.change_timer = setTimeout(this.onCodeChanged.bind(this), 200);
+						this.change_timer = setTimeout(this.onContentChange.bind(this), 200);
 					}
 				}
 			}));
@@ -132,13 +132,20 @@ void onMounted()
 
 
 /**
- * On code changed
+ * On code change
  */
-void onCodeChanged()
+void onContentChange()
 {
 	this.change_timer = null;
 	string value = this.instance.state.doc.toString();
 	this.old_value = value;
+	
+	/* Send value change */
+	if (this.model) this.model.onValueChange(value, this.data);
+	this.emit("valueChange", value, this.data);
+	
+	/* Send value changed */
+	if (this.model) this.model.onValueChanged(value, this.data);
 	this.emit("valueChanged", value, this.data);
 }
 
