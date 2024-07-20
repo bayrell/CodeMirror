@@ -5,6 +5,9 @@
 		"CodeMirror.bay",
 		"@resources/codemirror.js"
 	],
+	"groups": [
+		"widget"
+	],
 	"src": "./bay",
 	"dest":
 	{

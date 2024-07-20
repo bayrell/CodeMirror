@@ -26,16 +26,24 @@
 
 <class name="Runtime.Widget.CodeMirror.CodeMirror">
 
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
+
+
 <style global="true">
-.widget_codemirror.h-f977 .cm-editor{
+.widget_codemirror{
+	height: 100%;
+	.cm-editor{
+		outline: none;
+	}
+}
+.widget_codemirror.border{
 	border: 1px solid var(--widget-color-border);
-	outline: none;
 }
 </style>
 
 
 <template name="render">
-	<div class="widget_codemirror" @ref="codemirror"></div>
+	<div class="widget_codemirror" class={{ this.class }} @ref="codemirror"></div>
 </template>
 
 
@@ -137,16 +145,16 @@ void onMounted()
 void onContentChange()
 {
 	this.change_timer = null;
+	string old_value = this.old_value;
 	string value = this.instance.state.doc.toString();
 	this.old_value = value;
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(value, this.data);
-	this.emit("valueChange", value, this.data);
-	
-	/* Send value changed */
-	if (this.model) this.model.onValueChanged(value, this.data);
-	this.emit("valueChanged", value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": value,
+		"old_value": old_value,
+		"data": this.data,
+	});
 }
 
 
