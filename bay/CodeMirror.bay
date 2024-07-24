@@ -26,6 +26,7 @@
 
 <class name="Runtime.Widget.CodeMirror.CodeMirror">
 
+<use name="Runtime.Reference" />
 <use name="Runtime.Web.Messages.ValueChangeMessage" />
 
 
@@ -49,9 +50,11 @@
 
 <script>
 
+props Reference reference = null;
 props string language = null;
 props string height = "";
 props string value = "";
+props int timeout = 500;
 props var readonly = false;
 bool is_instance_created = false;
 var change_timer = null;
@@ -60,10 +63,18 @@ string old_value = "";
 
 
 /**
+ * Returns value
+ */
+string getValue() => this.instance.state.doc.toString();
+
+
+/**
  * Component mounted
  */
 void onMounted()
 {
+	this.reference.setValue(this);
+	
 	#ifcode JAVASCRIPT then
 	setTimeout
 	(
@@ -88,10 +99,14 @@ void onMounted()
 			extensions.push(view.EditorView.updateListener.of((update) => {
 				if (update.docChanged)
 				{
-					if (this.change_timer == null)
+					if (this.change_timer != null)
 					{
-						this.change_timer = setTimeout(this.onContentChange.bind(this), 200);
+						window.clearTimeout(this.change_timer);
+						this.change_timer = null;
 					}
+					this.change_timer = setTimeout(
+						this.onContentChange.bind(this), this.timeout
+					);
 				}
 			}));
 			
@@ -144,17 +159,18 @@ void onMounted()
  */
 void onContentChange()
 {
-	this.change_timer = null;
-	string old_value = this.old_value;
-	string value = this.instance.state.doc.toString();
-	this.old_value = value;
+	string value = this.getValue();
 	
 	/* Send value change */
 	this.emit("valueChange", new ValueChangeMessage{
 		"value": value,
-		"old_value": old_value,
+		"old_value": this.old_value,
 		"data": this.data,
 	});
+	
+	/* Set old value */
+	this.old_value = value;
+	this.change_timer = null;
 }
 
 
