@@ -82,11 +82,13 @@ void onMounted()
 			var view = Runtime.rtl.require("@codemirror/view");
 			var state = Runtime.rtl.require("@codemirror/state");
 			var commands = Runtime.rtl.require("@codemirror/commands");
+			var language = Runtime.rtl.require("@codemirror/language");
 			
 			var extensions = [
 				commands.history(),
 				view.lineNumbers(),
 				view.keymap.of([commands.indentWithTab]),
+				language.indentUnit.of("\t"),
 			];
 			
 			/* Set readonly */
