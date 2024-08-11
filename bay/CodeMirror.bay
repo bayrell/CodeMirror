@@ -73,10 +73,10 @@ string getValue() => this.instance.state.doc.toString();
  */
 void onMounted()
 {
-	this.reference.setValue(this);
+	if (this.reference) this.reference.setValue(this);
 	
 	#ifcode JAVASCRIPT then
-	setTimeout
+	this.nextTick
 	(
 		() => {
 			var view = Runtime.rtl.require("@codemirror/view");
@@ -150,7 +150,7 @@ void onMounted()
 				});
 				this.old_value = "";
 			}
-		}, 10
+		}
 	);
 	#endif
 }
